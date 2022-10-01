@@ -46,6 +46,7 @@ $routes->post('simpan-login', 'Auth::cekLogin');
 
 $routes->get('dashboard', 'Auth::dashboard');
 $routes->get('lihat-konfirmasi-pesanan', 'Auth::tabelKonfirmasi');
+$routes->get('lihat-status-pemesanan', 'Auth::statusPemesanan');
 $routes->get('lihat-data-kendaraan', 'Auth::dataKendaraan');
 $routes->get('lihat-data-pemesanan', 'Auth::viewDataPemesanan');
 $routes->get('tambah-pemesanan', 'Auth::tambahPemesanan');

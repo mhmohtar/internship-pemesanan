@@ -77,6 +77,7 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?=base_url('lihat-data-pemesanan')?>">Data Pemesanan</a>
+                        <a class="collapse-item" href="<?=base_url('lihat-status-pemesanan')?>">Status Pemesanan</a>
                         <a class="collapse-item" href="<?=base_url('lihat-data-pegawai')?>">Data Pegawai</a>
                         <a class="collapse-item" href="<?=base_url('lihat-data-kendaraan')?>">Data Kendaraan</a>
                     </div>

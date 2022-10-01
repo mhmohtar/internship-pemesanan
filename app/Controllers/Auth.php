@@ -7,11 +7,11 @@ use App\Models\AuthModel;
 class Auth extends BaseController
 {
     // koneksi ke database
+    protected $session;
     public function __construct(){
         $model = new AuthModel();
         $this->helpers = ['form', 'url'];   
     }
-    
     public function index(){
         echo view('login');
     }
@@ -33,6 +33,16 @@ class Auth extends BaseController
             'konfirmasip' => $model->statusPemesanan()
         ];
         echo view('admin/tbl_konfirmasip',$data);
+        echo view("layout/footer");
+    }
+    public function statusPemesanan(){
+        $model = new AuthModel();
+        echo view("layout/header");
+        $data = [
+            'judul' => 'Data Tabel Konfirmasi pesanan',
+            'statusp' => $model->statusPemesanan()
+        ];
+        echo view('admin/tbl_status_pemesanan',$data);
         echo view("layout/footer");
     }
     public function dataKendaraan(){
@@ -122,16 +132,14 @@ class Auth extends BaseController
         $user = $this->request->getPost('user');
         $pass = md5($this->request->getPost('pass'));
         $cek = $model->cekLogin($user, $pass);
+        // $session->set('username', $user);
         if($cek){
-            // single session
-            // $session->set('username', $user);
-            // multiple session
-            // $session = session();
-            $data_session = array('username' => $user,'password' => $pass);
+            $level = $cek['level'];
+            $data_session = array('username' => $user,'password' => $pass, 'level'=> $level);
             $this->session->set($data_session);
             if (($cek['username'] == $user) && ($cek['password'] == $pass)){
                 return redirect()->to(base_url('dashboard'));
-            } else {
+            }else {
                 return redirect()->to(base_url('login'));
             }
         }else{
@@ -143,41 +151,29 @@ class Auth extends BaseController
         $this->session = \Config\Services::session();
         $this->session->destroy();
         return redirect()->to(base_url('/'));
-        
     }
     public function simpanDaftar(){
-        $model = new AuthModel();
-        $nama = $this->request->getPost('nama');
-        $user = $this->request->getPost('user');
-        $pass = md5($this->request->getPost('pass'));  
-        $level = $this->request->getPost('level');  
+        $model = new AuthModel(); 
         $data = [
-			'nama_admin'=> $nama,
-			'username'  => $user,
-			'password'  => $pass,
-			'level'     => $level,
-			'status'   => 0
+			'nama_admin'=> $this->request->getPost('nama'),
+			'username'  => $this->request->getPost('user'),
+			'password'  => md5($this->request->getPost('pass')),
+			'level'     => $this->request->getPost('level'),
+			'status'    => 0
 		];
         $result = $model->simpanDaftar($data);
         echo "sukses simpan daftar";
     }
     public function simpanPegawai(){
         $model = new AuthModel();
-        $nama	= $this->request->getPost('nama');
-        $jk	    = $this->request->getPost('jk');
-        $tempat	= $this->request->getPost('tempat');
-        $agama	= $this->request->getPost('agama');
-        $alamat	= $this->request->getPost('alamat');
-        $telepon= $this->request->getPost('telepon');
-	
 		$data = [
 			'id_pegawai'		=> 0,
-			'nama_pegawai'		=> $nama,
-			'jenis_kelamin'		=> $jk,
-			'tempat_lahir'		=> $tempat,
-			'agama'		        => $agama,
-			'alamat'		    => $alamat,
-			'telepon'		    => $telepon
+			'nama_pegawai'		=> $this->request->getPost('nama'),
+			'jenis_kelamin'		=> $this->request->getPost('jk'),
+			'tempat_lahir'		=> $this->request->getPost('tempat'),
+			'agama'		        => $this->request->getPost('agama'),
+			'alamat'		    => $this->request->getPost('alamat'),
+			'telepon'		    => $this->request->getPost('telepon')
 		];
 		$result = $model->simpanPegawai($data);
 		if($result) {
@@ -188,17 +184,12 @@ class Auth extends BaseController
     }
     public function simpanKendaraan(){
         $model = new AuthModel();
-        $nopol	= $this->request->getPost('nopol');
-        $merk   = $this->request->getPost('merk');
-        $jenis	= $this->request->getPost('jenis');
-        $tahun	= $this->request->getPost('tahun');
-        $bahan	= $this->request->getPost('bahanbakar');
         $data = [
-			'id_nopol_kendaraan' => $nopol,
-			'merk'          => $merk,
-			'jenis'		    => $jenis,
-			'thn_pembuatan'	=> $tahun,
-			'bhn_bakar'		=> $bahan
+			'id_nopol_kendaraan' => $this->request->getPost('nopol'),
+			'merk'          => $this->request->getPost('merk'),
+			'jenis'		    => $this->request->getPost('jenis'),
+			'thn_pembuatan'	=> $this->request->getPost('tahun'),
+			'bhn_bakar'		=> $this->request->getPost('bahanbakar')
 		];
         $result = $model->simpanKendaraan($data);
 		if($result) {

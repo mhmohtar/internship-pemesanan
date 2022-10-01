@@ -34,15 +34,21 @@ class AuthModel extends Model {
         return $this->db->table('tbl_pemesanan')
                     ->join('tbl_pegawai','tbl_pegawai.id_pegawai=tbl_pemesanan.id_pegawai')
                     ->join('tbl_kendaraan','tbl_kendaraan.id_nopol_kendaraan=tbl_pemesanan.id_nopol_kendaraan')
+                    ->where('statusp',0)
                     ->get()->getResultArray();
     }
+    // public function dataStatusPemesanan(){
+    //     return $this->db->table('tbl_pemesanan')
+    //                 ->join('tbl_pegawai','tbl_pegawai.id_pegawai=tbl_pemesanan.id_pegawai')
+    //                 ->join('tbl_kendaraan','tbl_kendaraan.id_nopol_kendaraan=tbl_pemesanan.id_nopol_kendaraan')
+    //                 ->get()->getResultArray();
+    // }
     public function setStatusKendaraan($id){
         return $this->db->table('tbl_kendaraan')
                     // ->join('tbl_pemesanan', 'tbl_pemesanan.id_nopol_kendaraan=tbl_kendaraan.id_nopol_kendaraan')
                     ->set('status', 1)
                     ->where('id_nopol_kendaraan', $id)
                     ->get()->getResultArray();
-
     }
     public function viewPegawai(){
         return $this->db->table('tbl_pegawai')
@@ -61,7 +67,7 @@ class AuthModel extends Model {
     }
     public function konfirmasiPesanan($id) {
         return $this->db->table('tbl_pemesanan')
-                    ->set('status', 1)
+                    ->set('statusp', 1)
                     ->where('id_pemesanan', $id)
                     ->update();
     }
