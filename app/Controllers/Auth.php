@@ -9,8 +9,9 @@ class Auth extends BaseController
     // koneksi ke database
     protected $session;
     public function __construct(){
-        $model = new AuthModel();
+        $this->model = new AuthModel();
         $this->helpers = ['form', 'url'];   
+        $this->session = \Config\Services::session();
     }
     public function index(){
         echo view('login');
@@ -26,11 +27,10 @@ class Auth extends BaseController
         echo view("layout/footer");
     }
     public function tabelKonfirmasi(){
-        $model = new AuthModel();
         echo view("layout/header");
         $data = [
             'judul' => 'Data Tabel Konfirmasi pesanan',
-            'konfirmasip' => $model->statusPemesanan()
+            'konfirmasip' => $this->model->statusPemesanan()
         ];
         echo view('admin/tbl_konfirmasip',$data);
         echo view("layout/footer");
@@ -40,7 +40,7 @@ class Auth extends BaseController
         echo view("layout/header");
         $data = [
             'judul' => 'Data Tabel Konfirmasi pesanan',
-            'statusp' => $model->statusPemesanan()
+            'statusp' => $this->model->statusPemesanan()
         ];
         echo view('admin/tbl_status_pemesanan',$data);
         echo view("layout/footer");
@@ -50,7 +50,7 @@ class Auth extends BaseController
         echo view("layout/header");
         $data = [
             'judul' => 'Data Tabel Konfirmasi pesanan',
-            'kendaraan' => $model->dataKendaraan()
+            'kendaraan' => $this->model->dataKendaraan()
         ];
         echo view('admin/tbl_kendaraan',$data);
         echo view("layout/footer");
@@ -66,11 +66,10 @@ class Auth extends BaseController
         echo view("layout/footer");
     }
     public function viewPegawai(){
-        $model = new AuthModel();
         echo view("layout/header");
         $data = [
             'judul' => "Lihat Data Pegawai",
-            'pegawai' => $model->viewPegawai()
+            'pegawai' => $this->model->viewPegawai()
         ];
         echo view('admin/tbl_pegawai', $data);
         echo view("layout/footer");
@@ -81,24 +80,24 @@ class Auth extends BaseController
         echo view("layout/footer");
     }
     public function viewDataPemesanan(){
-        $model = new AuthModel();
         echo view("layout/header");
         $data = [
             'judul' => "Lihat Data Pemesanan",
-            'pesanan' => $model->viewDataPemesanan()
+            'pesanan' => $this->model->viewDataPemesanan()
         ];
         echo view('admin/tbl_pemesanan', $data);
         echo view("layout/footer");
     }
     // crud 
     public function konfirmasiPemesanan($id){
-        $model = new AuthModel();
         // echo  $this->request->getPost('id_pesanan');
-        $data = $model->konfirmasiPesanan($id);
+        $data = $this->model->konfirmasiPesanan($id);
         if($data){
-            echo "sukses proses peminjaman";
+            $this->session->setFlash('pesan','Pemesanan disetujui !');
+            return redirect()->to(base_url('lihat-konfirmasi-pesanan'));
         }else{
-            echo "gagal proses peminjaman";
+            $this->session->setFlash('pesan','Pemesanan Gagal Disetujui !');
+            return redirect()->to(base_url('lihat-konfirmasi-pesanan'));
         }
     }
     // simpan pemesanan
@@ -128,10 +127,9 @@ class Auth extends BaseController
     public function cekLogin(){
         // https://ahmadsufyan.my.id/form-login-ci4/
         $this->session = \Config\Services::session();
-        $model = new AuthModel();
         $user = $this->request->getPost('user');
         $pass = md5($this->request->getPost('pass'));
-        $cek = $model->cekLogin($user, $pass);
+        $cek = $this->model->cekLogin($user, $pass);
         // $session->set('username', $user);
         if($cek){
             $level = $cek['level'];
@@ -153,7 +151,6 @@ class Auth extends BaseController
         return redirect()->to(base_url('/'));
     }
     public function simpanDaftar(){
-        $model = new AuthModel(); 
         $data = [
 			'nama_admin'=> $this->request->getPost('nama'),
 			'username'  => $this->request->getPost('user'),
@@ -161,7 +158,7 @@ class Auth extends BaseController
 			'level'     => $this->request->getPost('level'),
 			'status'    => 0
 		];
-        $result = $model->simpanDaftar($data);
+        $result = $this->model->simpanDaftar($data);
         echo "sukses simpan daftar";
     }
     public function simpanPegawai(){
@@ -175,7 +172,7 @@ class Auth extends BaseController
 			'alamat'		    => $this->request->getPost('alamat'),
 			'telepon'		    => $this->request->getPost('telepon')
 		];
-		$result = $model->simpanPegawai($data);
+		$result = $this->model->simpanPegawai($data);
 		if($result) {
 			echo "Sukses Disimpan.";
 		} else {
@@ -183,7 +180,6 @@ class Auth extends BaseController
 		}
     }
     public function simpanKendaraan(){
-        $model = new AuthModel();
         $data = [
 			'id_nopol_kendaraan' => $this->request->getPost('nopol'),
 			'merk'          => $this->request->getPost('merk'),
@@ -191,7 +187,7 @@ class Auth extends BaseController
 			'thn_pembuatan'	=> $this->request->getPost('tahun'),
 			'bhn_bakar'		=> $this->request->getPost('bahanbakar')
 		];
-        $result = $model->simpanKendaraan($data);
+        $result = $this->model->simpanKendaraan($data);
 		if($result) {
 			echo "sukses data disimpan.";
 		} else {

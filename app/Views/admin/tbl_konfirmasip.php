@@ -1,9 +1,16 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <p class="fs-5 fw-light font-monospace text-gray-800">Tabel Data</p>
+    <p class="fs-5 fw-light text-gray-800">Tabel Data</p>
     <!-- DataTales Example -->
     <div class="card shadow">
+
+        <?php if(session()->getFlashdata('pesan')) : ?>
+        <div class="alert alert-success text-center">
+            <?=session()->getFlashdata('pesan') ?>
+        </div>
+        <?php endif;?>
+
         <div class="card-header py-3">
             <h6 class="m-0 fw-light text-dark">Data Pemesanan Yang Belom Di konfirmasi</h6>
         </div>

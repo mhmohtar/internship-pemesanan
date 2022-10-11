@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 30, 2022 at 06:44 PM
+-- Generation Time: Oct 10, 2022 at 09:30 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -125,7 +125,7 @@ CREATE TABLE `tbl_pemesanan` (
 --
 
 INSERT INTO `tbl_pemesanan` (`id_pemesanan`, `id_pegawai`, `id_nopol_kendaraan`, `tgl_pemesanan`, `statusp`) VALUES
-(17, 1, 'A3619TAB', '2022-09-30', 0),
+(17, 1, 'A3619TAB', '2022-09-30', 1),
 (18, 1, 'A3619TAB', '2022-09-30', 0),
 (19, 1, 'A3619TAB', '2022-09-30', 0),
 (20, 1, 'A3619TAB', '2022-09-30', 0);
